@@ -28,8 +28,12 @@ commands:
       - run: cd ./infrastructure && npm run build
   deploy-app:
     steps:
-      - run: pwd && ls -la
-      - run: cd ./infrastructure && npm run deploy
+      - run:
+          name: List build directory
+          command: cd ./infrastructure && ls -la /home/circleci/project
+      - run:
+          name: Deploy
+          command: cd ./infrastructure && npm run deploy
 
 jobs:
   build:
@@ -45,6 +49,7 @@ jobs:
     executor: aws-cli/default
     resource_class: small
     steps:
+      - checkout
       - aws-cli/setup
       - deploy-app
 
