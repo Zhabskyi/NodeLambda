@@ -8,53 +8,69 @@ executors:
     docker:
       - image: cimg/node:20.12.1
 
-deploy-app:
-  steps:
-    - run:
-        name: List build directory
-        command: cd ./infrastructure && ls -la /home/circleci/project
-    - run:
-        name: Deploy
-        command: cd ./infrastructure && npm run deploy
+commands:
+  install-dependencies:
+    steps:
+      - run: npm install .
+      - run: cd ./infrastructure && npm install .
+  cache-dependencies:
+    steps:
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+            - ./infrastructure/node_modules
+  restore-dependencies:
+    steps:
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+  build-app:
+    steps:
+      - run: npm run build
+  deploy-app:
+    steps:
+      - run: cd ./infrastructure && npm run deploy
 
 jobs:
   build:
     executor: default
-    resource_class: small
     steps:
       - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            npm install
-      - run:
-          name: Build
-          command: |
-            npm run build
+      - restore-dependencies
+      - install-dependencies
+      - cache-dependencies
+      - build-app
+      - persist_to_workspace:
+          root: ~/
+          paths: project/build
 
   deploy:
-    executor: default
+    executor: aws-cli/default
     resource_class: small
     steps:
       - checkout
+      - restore-dependencies
+      - install-dependencies
+      - cache-dependencies
+      - attach_workspace:
+          at: ~/
       - aws-cli/setup
       - deploy-app
 
 workflows:
   version: 2
-  build_and_deploy:
+  ci-main:
     jobs:
-      build:
-        context: aws-account
-        filters:
-          branches:
-            only:
-              - main
-      deploy:
-        context: aws-account
-        requires:
-          - build
-        filters:
-          branches:
-            only:
-              - main
+      - build:
+          filters:
+            branches:
+              only:
+                - main
+      - deploy:
+          context: aws-account
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - main
