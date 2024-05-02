@@ -5,7 +5,8 @@
     "infrastructure": "./bin/infrastructure.ts"
   },
   "scripts": {
-    "build": "tsc",
+    "clean": "rimraf bin && rimraf cdk.out",
+    "build": "npm run clean && tsc",
     "watch": "tsc -w",
     "diff": "cdk diff",
     "deploy": "cdk deploy -v --require-approval never"
