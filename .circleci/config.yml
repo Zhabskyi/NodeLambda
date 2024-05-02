@@ -28,7 +28,8 @@ commands:
       - run: cd ./infrastructure && npm run build
   deploy-app:
     steps:
-      - run: npm run deploy
+      - run: pwd && ls -la
+      - run: cd ./infrastructure && npm run deploy
 
 jobs:
   build:
