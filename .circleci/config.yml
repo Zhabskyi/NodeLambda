@@ -40,9 +40,6 @@ jobs:
       - install-dependencies
       - cache-dependencies
       - build-app
-      - persist_to_workspace:
-          root: ~/
-          paths: project/build
 
   deploy:
     executor: aws-cli/default
@@ -52,8 +49,6 @@ jobs:
       - restore-dependencies
       - install-dependencies
       - cache-dependencies
-      - attach_workspace:
-          at: ~/
       - aws-cli/setup
       - deploy-app
 
