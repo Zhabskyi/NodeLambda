@@ -55,8 +55,8 @@ jobs:
       - cache-dependencies
       - aws-cli/setup
       - run:
-        name: List infrastructure directory
-        command: cd ./infrastructure && ls -la
+          name: List infrastructure directory
+          command: cd ./infrastructure && ls -la
       - deploy-app
 
 workflows:
