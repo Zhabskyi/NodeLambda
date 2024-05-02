@@ -1,0 +1,19 @@
+{
+  "name": "lambda-function",
+  "version": "0.1.0",
+  "bin": {
+    "infrastructure": "./bin/infrastructure.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "diff": "cdk diff",
+    "deploy": "cdk deploy -v --require-approval never"
+  },
+  "dependencies": {
+    "aws-cdk": "^2.137.0",
+    "aws-cdk-lib": "^2.137.0",
+    "constructs": "^10.3.0",
+    "source-map-support": "^0.5.21"
+  }
+}

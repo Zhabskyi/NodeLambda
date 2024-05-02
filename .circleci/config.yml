@@ -1,0 +1,60 @@
+version: 2.1
+
+orbs:
+  aws-cli: circleci/aws-cli@4.1.3
+
+executors:
+  default:
+    docker:
+      - image: cimg/node:20.12.1
+
+deploy-app:
+  steps:
+    - run:
+        name: List build directory
+        command: cd ./infrastructure && ls -la /home/circleci/project
+    - run:
+        name: Deploy
+        command: cd ./infrastructure && npm run deploy
+
+jobs:
+  build:
+    executor: default
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            npm install
+      - run:
+          name: Build
+          command: |
+            npm run build
+
+  deploy:
+    executor: default
+    resource_class: small
+    steps:
+      - checkout
+      - aws-cli/setup
+      - deploy-app
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      build:
+        context: aws-account
+        filters:
+          branches:
+            only:
+              - main
+      deploy:
+        context: aws-account
+        requires:
+          - build
+        filters:
+          branches:
+            only:
+              - main
