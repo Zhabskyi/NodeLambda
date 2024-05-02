@@ -64,12 +64,13 @@ workflows:
   ci-main:
     jobs:
       - build:
+          context: app-dev
           filters:
             branches:
               only:
                 - main
       - deploy:
-          context: aws-account
+          context: app-dev
           requires:
             - build
           filters:
