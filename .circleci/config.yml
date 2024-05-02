@@ -46,7 +46,7 @@ jobs:
       - build-app
 
   deploy:
-    executor: aws-cli/default
+    executor: default
     resource_class: small
     steps:
       - checkout
