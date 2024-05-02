@@ -50,6 +50,9 @@ jobs:
     resource_class: small
     steps:
       - checkout
+      - restore-dependencies
+      - install-dependencies
+      - cache-dependencies
       - aws-cli/setup
       - deploy-app
 
