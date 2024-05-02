@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import "source-map-support/register";
 import { App } from "@aws-cdk/core";
-import { InfrastructureStack } from "./infrastructure-stack";
+import { NodeLambdaStack } from "./infrastructure-stack";
 
 const app = new App();
-const stack = new InfrastructureStack(app, "NodeLambda", {});
+const stack = new NodeLambdaStack(app, "NodeLambdaStack", {});
