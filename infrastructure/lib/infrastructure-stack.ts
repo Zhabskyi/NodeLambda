@@ -15,14 +15,12 @@ export class NodeLambdaStack extends cdk.Stack {
       handler: "lambda.handler" // File and method name
     });
 
-    const api = new RestApi(this, "YourApi", {
+    const api = new RestApi(this, "MyAPI", {
       restApiName: "Your API Name",
       description: "This is your API connected to Lambda"
     });
 
-    const lambdaIntegration = new LambdaIntegration(myLambda, {
-      requestTemplates: { "application/json": '{ "statusCode": "200" }' }
-    });
+    const lambdaIntegration = new LambdaIntegration(myLambda);
 
     const resource = api.root.addResource("hello");
     resource.addMethod("GET", lambdaIntegration); // or POST, PUT, etc.
